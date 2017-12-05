@@ -86,7 +86,7 @@ func NewController(
 
 	// Create event broadcaster
 	// Add o6s types to the default Kubernetes Scheme so Events can be
-	// logged for sample-controller types.
+	// logged for faas-controller types.
 	faasscheme.AddToScheme(scheme.Scheme)
 	glog.V(4).Info("Creating event broadcaster")
 	eventBroadcaster := record.NewBroadcaster()
@@ -168,8 +168,7 @@ func (c *Controller) Run(threadiness int, stopCh <-chan struct{}) error {
 }
 
 // runWorker is a long-running function that will continually call the
-// processNextWorkItem function in order to read and process a message on the
-// workqueue.
+// processNextWorkItem function in order to read and process a message on the workqueue.
 func (c *Controller) runWorker() {
 	for c.processNextWorkItem() {
 	}
@@ -190,16 +189,14 @@ func (c *Controller) processNextWorkItem() bool {
 		// processing this item. We also must remember to call Forget if we
 		// do not want this work item being re-queued. For example, we do
 		// not call Forget if a transient error occurs, instead the item is
-		// put back on the workqueue and attempted again after a back-off
-		// period.
+		// put back on the workqueue and attempted again after a back-off period.
 		defer c.workqueue.Done(obj)
 		var key string
 		var ok bool
 		// We expect strings to come off the workqueue. These are of the
 		// form namespace/name. We do this as the delayed nature of the
 		// workqueue means the items in the informer cache may actually be
-		// more up to date that when the item was initially put onto the
-		// workqueue.
+		// more up to date that when the item was initially put onto the workqueue.
 		if key, ok = obj.(string); !ok {
 			// As the item in the workqueue is actually invalid, we call
 			// Forget here else we'd go into a loop of attempting to
@@ -242,8 +239,7 @@ func (c *Controller) syncHandler(key string) error {
 	// Get the Function resource with this namespace/name
 	function, err := c.functionsLister.Functions(namespace).Get(name)
 	if err != nil {
-		// The Function resource may no longer exist, in which case we stop
-		// processing.
+		// The Function resource may no longer exist, in which case we stop processing.
 		if errors.IsNotFound(err) {
 			runtime.HandleError(fmt.Errorf("function '%s' in work queue no longer exists", key))
 			return nil
@@ -378,6 +374,7 @@ func (c *Controller) handleObject(obj interface{}) {
 }
 
 // newService creates a new ClusterIP Service for a Function resource.
+// TODO: implement del
 func newService(function *faasv1alpha1.Function) *corev1.Service {
 	return &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
