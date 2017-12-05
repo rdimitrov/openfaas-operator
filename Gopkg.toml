@@ -1,0 +1,17 @@
+required = ["k8s.io/code-generator/cmd/client-gen"]
+
+[[constraint]]
+  name = "k8s.io/apimachinery"
+  branch = "release-1.8"
+
+[[constraint]]
+  name = "k8s.io/client-go"
+  branch = "release-5.0"
+
+[[constraint]]
+  name = "k8s.io/code-generator"
+  branch = "release-1.8"
+
+[[override]]
+  name = "k8s.io/gengo"
+  revision = "9e661e9308f078838e266cca1c673922088c0ea4"
