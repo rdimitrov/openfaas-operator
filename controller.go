@@ -403,18 +403,8 @@ func newService(function *faasv1alpha1.Function) *corev1.Service {
 // the appropriate OwnerReferences on the resource so handleObject can discover
 // the Function resource that 'owns' it.
 func newDeployment(function *faasv1alpha1.Function) *appsv1beta2.Deployment {
-	labels := map[string]string{
-		"faas_function": function.Spec.Name,
-		"app":           function.Spec.Name,
-		"controller":    function.Name,
-	}
-	if function.Spec.Labels != nil {
-		for k, v := range *function.Spec.Labels {
-			labels[k] = v
-		}
-	}
-
 	envVars := makeEnvVars(function)
+	labels := makeLabels(function)
 	livenessProbe := makeLivenessProbe()
 
 	return &appsv1beta2.Deployment{
@@ -480,6 +470,21 @@ func makeEnvVars(function *faasv1alpha1.Function) []corev1.EnvVar {
 	}
 
 	return envVars
+}
+
+func makeLabels(function *faasv1alpha1.Function) map[string]string {
+	labels := map[string]string{
+		"faas_function": function.Spec.Name,
+		"app":           function.Spec.Name,
+		"controller":    function.Name,
+	}
+	if function.Spec.Labels != nil {
+		for k, v := range *function.Spec.Labels {
+			labels[k] = v
+		}
+	}
+
+	return labels
 }
 
 func makeLivenessProbe() *corev1.Probe {
