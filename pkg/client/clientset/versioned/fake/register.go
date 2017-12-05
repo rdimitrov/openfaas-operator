@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Stefan Prodan
+Copyright 2017 OpenFaaS Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 package fake
 
 import (
-	o6sv1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6s.io/v1alpha1"
+	o6sv1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6sio/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

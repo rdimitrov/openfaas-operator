@@ -9,5 +9,5 @@ CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${SCRIPT_ROOT}; ls -d -1 ./vendor/k8s.io/code-ge
 
 vendor/k8s.io/code-generator/generate-groups.sh all \
   github.com/stefanprodan/faas-k8s/pkg/client github.com/stefanprodan/faas-k8s/pkg/apis \
-  o6s.io:v1alpha1 \
+  o6sio:v1alpha1 \
   --go-header-file ${SCRIPT_ROOT}/hack/custom-boilerplate.go.txt

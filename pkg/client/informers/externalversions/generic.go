@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Stefan Prodan
+Copyright 2017 OpenFaaS Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package externalversions
 
 import (
 	"fmt"
-	v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6s.io/v1alpha1"
+	v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6sio/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
 )

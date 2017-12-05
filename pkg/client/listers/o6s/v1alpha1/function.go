@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Stefan Prodan
+Copyright 2017 OpenFaaS Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6s.io/v1alpha1"
+	v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6sio/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"

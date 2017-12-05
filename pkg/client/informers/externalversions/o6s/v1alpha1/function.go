@@ -1,5 +1,5 @@
 /*
-Copyright 2017 Stefan Prodan
+Copyright 2017 OpenFaaS Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	o6s_io_v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6s.io/v1alpha1"
+	o6sio_v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/apis/o6sio/v1alpha1"
 	versioned "github.com/stefanprodan/faas-k8s/pkg/client/clientset/versioned"
 	internalinterfaces "github.com/stefanprodan/faas-k8s/pkg/client/informers/externalversions/internalinterfaces"
 	v1alpha1 "github.com/stefanprodan/faas-k8s/pkg/client/listers/o6s/v1alpha1"
@@ -54,7 +54,7 @@ func NewFunctionInformer(client versioned.Interface, namespace string, resyncPer
 				return client.O6sV1alpha1().Functions(namespace).Watch(options)
 			},
 		},
-		&o6s_io_v1alpha1.Function{},
+		&o6sio_v1alpha1.Function{},
 		resyncPeriod,
 		indexers,
 	)
@@ -65,7 +65,7 @@ func defaultFunctionInformer(client versioned.Interface, resyncPeriod time.Durat
 }
 
 func (f *functionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&o6s_io_v1alpha1.Function{}, defaultFunctionInformer)
+	return f.factory.InformerFor(&o6sio_v1alpha1.Function{}, defaultFunctionInformer)
 }
 
 func (f *functionInformer) Lister() v1alpha1.FunctionLister {
