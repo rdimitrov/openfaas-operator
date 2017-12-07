@@ -260,7 +260,10 @@ func (c *Controller) syncHandler(key string) error {
 	deployment, err := c.deploymentsLister.Deployments(function.Namespace).Get(deploymentName)
 	// If the resource doesn't exist, we'll create it
 	if errors.IsNotFound(err) {
-		c.kubeclientset.CoreV1().Services(function.Namespace).Create(newService(function))
+		if _, err := c.kubeclientset.CoreV1().Services(function.Namespace).Create(newService(function)); err != nil {
+			// If an error occurs during Service Create, we'll requeue the item
+			return err
+		}
 		deployment, err = c.kubeclientset.AppsV1beta2().Deployments(function.Namespace).Create(newDeployment(function))
 	}
 
@@ -372,14 +375,22 @@ func (c *Controller) handleObject(obj interface{}) {
 	}
 }
 
-// newService creates a new ClusterIP Service for a Function resource.
-// TODO: implement del
+// newService creates a new ClusterIP Service for a Function resource. It also sets
+// the appropriate OwnerReferences on the resource so handleObject can discover
+// the Function resource that 'owns' it.
 func newService(function *faasv1alpha1.Function) *corev1.Service {
 	return &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        function.Spec.Name,
 			Namespace:   function.Namespace,
 			Annotations: map[string]string{"prometheus.io.scrape": "false"},
+			OwnerReferences: []metav1.OwnerReference{
+				*metav1.NewControllerRef(function, schema.GroupVersionKind{
+					Group:   faasv1alpha1.SchemeGroupVersion.Group,
+					Version: faasv1alpha1.SchemeGroupVersion.Version,
+					Kind:    faasKind,
+				}),
+			},
 		},
 		Spec: corev1.ServiceSpec{
 			Type:     corev1.ServiceTypeClusterIP,
