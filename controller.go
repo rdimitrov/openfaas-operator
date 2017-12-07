@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"time"
 
@@ -488,7 +487,7 @@ func makeLabels(function *faasv1alpha1.Function) map[string]string {
 }
 
 func makeLivenessProbe() *corev1.Probe {
-	path := filepath.Join(os.TempDir(), ".lock")
+	path := filepath.Join("/tmp/", ".lock")
 	probe := &corev1.Probe{
 		Handler: corev1.Handler{
 			Exec: &corev1.ExecAction{
