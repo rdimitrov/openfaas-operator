@@ -31,5 +31,14 @@ $ kubectl run -it --rm --restart=Never curl --image=byrnedo/alpine-curl --comman
 / # curl -d 'verbose' http://nodeinfo.default:8080
 ```
 
+Delete nodeinfo function:
+```bash
+kubectl delete -f artifacts/nodeinfo.yaml 
+```
+
+Check if nodeinfo pods, rc, deployment and service were removed:
+```bash
+kubectl get all
+```
 
 
