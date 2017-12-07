@@ -7,5 +7,5 @@ spec:
   version: v1alpha1
   names:
     kind: Function
-    plural: Functions
+    plural: functions
   scope: Namespaced
