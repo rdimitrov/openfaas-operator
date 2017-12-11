@@ -284,7 +284,7 @@ func (c *Controller) syncHandler(key string) error {
 
 	// Update the Deployment resource if the Function definition differs
 	if deploymentNeedsUpdate(function, deployment) {
-		glog.V(4).Infof("Deployment for %v needs to be updated", function.Spec.Name)
+		glog.Infof("Deployment for %v needs to be updated", function.Spec.Name)
 		deployment, err = c.kubeclientset.AppsV1beta2().Deployments(function.Namespace).Update(newDeployment(function))
 	}
 
