@@ -282,11 +282,9 @@ func (c *Controller) syncHandler(key string) error {
 		return fmt.Errorf(msg)
 	}
 
-	// If this number of the replicas on the Function resource is specified, and the
-	// number does not equal the current desired replicas on the Deployment, we
-	// should update the Deployment resource.
-	if function.Spec.Replicas != nil && *function.Spec.Replicas != *deployment.Spec.Replicas {
-		glog.V(4).Infof("Functions: %d, replicas: %d", *function.Spec.Replicas, *deployment.Spec.Replicas)
+	// Update the Deployment resource if the Function definition differs
+	if deploymentNeedsUpdate(function, deployment) {
+		glog.V(4).Infof("Deployment for %v needs to be updated", function.Spec.Name)
 		deployment, err = c.kubeclientset.AppsV1beta2().Deployments(function.Namespace).Update(newDeployment(function))
 	}
 
@@ -513,4 +511,73 @@ func makeLivenessProbe() *corev1.Probe {
 	}
 
 	return probe
+}
+
+func deploymentNeedsUpdate(function *faasv1alpha1.Function, deployment *appsv1beta2.Deployment) bool {
+	needsUpdate := false
+
+	if function.Spec.Replicas != nil && *function.Spec.Replicas != *deployment.Spec.Replicas {
+		glog.V(4).Infof("Function %s replica count changed from %d to %d",
+			function.Spec.Name, *deployment.Spec.Replicas, *function.Spec.Replicas)
+		needsUpdate = true
+	}
+
+	currentImage := deployment.Spec.Template.Spec.Containers[0].Image
+	if function.Spec.Image != deployment.Spec.Template.Spec.Containers[0].Image {
+		glog.V(4).Infof("Function %s image changed from %d to %d",
+			function.Spec.Name, currentImage, function.Spec.Image)
+		needsUpdate = true
+	}
+
+	currentEnv := deployment.Spec.Template.Spec.Containers[0].Env
+	funcEnv := makeEnvVars(function)
+	if envVarsNotEqual(currentEnv, funcEnv) {
+		glog.V(4).Infof("Function %s envVars have changed",
+			function.Spec.Name)
+		needsUpdate = true
+	}
+
+	currentLabels := deployment.Spec.Template.Labels
+	funcLabels := makeLabels(function)
+	if labelsNotEqual(currentLabels, funcLabels) {
+		glog.V(4).Infof("Function %s labels have changed",
+			function.Spec.Name)
+		needsUpdate = true
+	}
+
+	return needsUpdate
+}
+
+func envVarsNotEqual(a, b []corev1.EnvVar) bool {
+	if len(a) != len(b) {
+		return true
+	}
+	mb := map[string]bool{}
+	for _, x := range b {
+		mb[x.Name+x.Value] = true
+	}
+
+	for _, x := range a {
+		if _, ok := mb[x.Name+x.Value]; !ok {
+			return true
+		}
+	}
+	return false
+}
+
+func labelsNotEqual(a, b map[string]string) bool {
+	if len(a) != len(b) {
+		return true
+	}
+	mb := map[string]bool{}
+	for v, x := range b {
+		mb[v+x] = true
+	}
+
+	for v, x := range a {
+		if _, ok := mb[v+x]; !ok {
+			return true
+		}
+	}
+	return false
 }

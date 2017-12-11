@@ -16,7 +16,7 @@ $ go run *.go -kubeconfig=$HOME/.kube/config -logtostderr=true
 
 Create a function:
 ```bash
-$ kubectl create -f artifacts/nodeinfo.yaml
+$ kubectl apply -f artifacts/nodeinfo.yaml
 ```
 
 Check if nodeinfo deployment and service were created through the CRD:
