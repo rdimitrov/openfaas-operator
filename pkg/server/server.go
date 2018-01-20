@@ -14,13 +14,20 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// TODO: Move to config pattern used else-where across project
+
+const defaultHTTPPort = 8081
+const defaultReadTimeout = 8
+const defaultWriteTimeout = 8
+
+// Start starts HTTP Server for API
 func Start(client clientset.Interface) {
 	functionNamespace := "default"
 	if namespace, exists := os.LookupEnv("function_namespace"); exists {
 		functionNamespace = namespace
 	}
 
-	port := 9090
+	port := defaultHTTPPort
 	if portVal, exists := os.LookupEnv("port"); exists {
 		parsedVal, parseErr := strconv.Atoi(portVal)
 		if parseErr == nil && parsedVal > 0 {
@@ -28,7 +35,7 @@ func Start(client clientset.Interface) {
 		}
 	}
 
-	readTimeout := 8
+	readTimeout := defaultReadTimeout
 	if val, exists := os.LookupEnv("read_timeout"); exists {
 		parsedVal, parseErr := strconv.Atoi(val)
 		if parseErr == nil && parsedVal > 0 {
@@ -36,7 +43,7 @@ func Start(client clientset.Interface) {
 		}
 	}
 
-	writeTimeout := 8
+	writeTimeout := defaultWriteTimeout
 	if val, exists := os.LookupEnv("write_timeout"); exists {
 		parsedVal, parseErr := strconv.Atoi(val)
 		if parseErr == nil && parsedVal > 0 {
@@ -44,7 +51,7 @@ func Start(client clientset.Interface) {
 		}
 	}
 
-	pprof := "true"
+	pprof := "false"
 	if val, exists := os.LookupEnv("pprof"); exists {
 		pprof = val
 	}
@@ -70,6 +77,7 @@ func Start(client clientset.Interface) {
 	if pprof == "true" {
 		bootstrap.Router().PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
 	}
+
 	bootstrap.Router().Path("/metrics").Handler(promhttp.Handler())
 
 	glog.Infof("Using namespace '%s'", functionNamespace)

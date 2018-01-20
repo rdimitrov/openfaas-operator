@@ -9,10 +9,20 @@ Create OpenFaaS CRD:
 $ kubectl create -f artifacts/openfaas-crd.yaml
 ```
 
-Start OpenFaaS controller (assumes you have a working GKE kubeconfig):
+Start OpenFaaS controller (assumes you have a working kubeconfig on the machine):
+
+```bash
+$ go build \
+  && ./faas-o6s -kubeconfig=$HOME/.kube/config -logtostderr=true
+```
+
+With `go run`
+
 ```bash
 $ go run *.go -kubeconfig=$HOME/.kube/config -logtostderr=true
 ```
+
+To use an alternative port set the `port` environmental variable to another value.
 
 Create a function:
 ```bash
@@ -46,25 +56,25 @@ kubectl get all
 Create or update a function:
 
 ```bash
-curl -d '{"service":"nodeinfo","image":"functions/nodeinfo:burner","envProcess":"node main.js","labels":{"com.openfaas.scale.min":"2","com.openfaas.scale.max":"15"},"environment":{"output":"verbose","debug":"true"}}' -X POST  http://localhost:9090/system/functions
+curl -d '{"service":"nodeinfo","image":"functions/nodeinfo:burner","envProcess":"node main.js","labels":{"com.openfaas.scale.min":"2","com.openfaas.scale.max":"15"},"environment":{"output":"verbose","debug":"true"}}' -X POST  http://localhost:8081/system/functions
 ```
 
 List functions:
 
 ```bash
-curl http://localhost:9090/system/functions | jq .
+curl http://localhost:8081/system/functions | jq .
 ```
 
 Scale PODs up/down:
 
 ```bash
-curl -d '{"serviceName":"nodeinfo", "replicas": 3}' -X POST http://localhost:9090/system/scale-function/nodeinfo
+curl -d '{"serviceName":"nodeinfo", "replicas": 3}' -X POST http://localhost:8081/system/scale-function/nodeinfo
 ```
 
 Remove function:
 
 ```bash
-curl -d '{"functionName":"nodeinfo"}' -X DELETE http://localhost:9090/system/functions
+curl -d '{"functionName":"nodeinfo"}' -X DELETE http://localhost:8081/system/functions
 ```
 
 ### Logging
@@ -80,22 +90,22 @@ Verbosity levels:
 Prometheus route:
 
 ```bash
-curl http://localhost:9090/metrics
+curl http://localhost:8081/metrics
 ```
 
-Profiling is enabled by default, to disable it set `pprof` environment variable to `false`.
+Profiling is disabled by default, to enable it set `pprof` environment variable to `true`.
 
-Pprof web UI can be access at `http://localhost:9090/debug/pprof/`. The goroutine, heap and threadcreate 
+Pprof web UI can be access at `http://localhost:8081/debug/pprof/`. The goroutine, heap and threadcreate 
 profilers are enabled along with the full goroutine stack dump.
 
 Run the heap profiler:
 
 ```bash
-go tool pprof goprofex http://localhost:9090/debug/pprof/heap
+go tool pprof goprofex http://localhost:8081/debug/pprof/heap
 ```
 
 Run the goroutine profiler:
 
 ```bash
-go tool pprof goprofex http://localhost:9090/debug/pprof/goroutine
+go tool pprof goprofex http://localhost:8081/debug/pprof/goroutine
 ```
