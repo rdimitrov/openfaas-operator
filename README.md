@@ -1,5 +1,10 @@
 # faas-o6s
 
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/openfaas-incubator/faas-o6s)](https://goreportcard.com/report/github.com/openfaas-incubator/faas-o6s) [![Build
+Status](https://travis-ci.org/openfaas-incubator/faas-o6s.svg?branch=master)](https://travis-ci.org/openfaas-incubator/faas-o6s) [![GoDoc](https://godoc.org/github.com/openfaas-incubator/faas-o6s?status.svg)](https://godoc.org/github.com/openfaas-incubator/faas-o6s) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![OpenFaaS](https://img.shields.io/badge/openfaas-serverless-blue.svg)](https://www.openfaas.com)
+
 OpenFaaS Kubernetes CRD Controller
 
 ### Deploy
