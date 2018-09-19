@@ -33,8 +33,11 @@ func makeProxy(functionNamespace string, timeout time.Duration) http.HandlerFunc
 		}
 
 		switch r.Method {
-		case http.MethodGet,
-			http.MethodPost:
+		case http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodGet:
 
 			vars := mux.Vars(r)
 			service := vars["name"]
