@@ -20,3 +20,9 @@ ci-armhf-build:
 
 ci-armhf-push:
 	docker push openfaas/openfaas-operator:$(TAG)-armhf
+
+ci-arm64-build:
+	docker build -t openfaas/openfaas-operator:$(TAG)-arm64 . -f Dockerfile.arm64
+
+ci-arm64-push:
+	docker push openfaas/openfaas-operator:$(TAG)-arm64
